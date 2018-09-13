@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {renderTarget,TextureOffSet,planeMat} from './planeMat';
-import {lerp} from './calc'
+import { renderTarget, TextureOffSet, planeMat } from './planeMat';
+import { lerp } from './calc'
 const renderer = new THREE.WebGLRenderer();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(70, 16 / 9, 0.1, 2000);
@@ -10,7 +10,7 @@ document.body.appendChild(renderer.domElement);
 
 const boxGeo = new THREE.BoxGeometry(100, 100, 100);
 const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const boxMesh = new THREE.Mesh(boxGeo,boxMaterial);
+const boxMesh = new THREE.Mesh(boxGeo, boxMaterial);
 boxMesh.position.z = -500;
 
 const boxLight = new THREE.PointLight(0xffffff, 0.4);
@@ -25,7 +25,7 @@ const planeGeo = new THREE.PlaneGeometry(512, 288);
 const planeMesh = new THREE.Mesh(planeGeo, planeMat)
 
 planeMesh.position.z = -200;
-const boxMesh2 = new THREE.Mesh(boxGeo,planeMat);
+const boxMesh2 = new THREE.Mesh(boxGeo, planeMat);
 boxMesh2.position.z = -500;
 
 boxMesh.rotateX(0.5)
@@ -33,12 +33,12 @@ boxMesh.rotateX(0.5)
 scene.add(boxMesh, boxLight);
 vibroScene.add(planeMesh);
 let start = false
-document.addEventListener('click',()=>{
+document.addEventListener('click', () => {
   start = !start;
   console.log(start);
 })
 
-TextureOffSet.set(0.015,0.015);
+TextureOffSet.set(0.015, 0.015);
 
 render();
 
@@ -48,17 +48,20 @@ function render() {
   boxMesh.rotateY(0.002);
   // const randomVec = new THREE.Vector2(0.1,0.1).rotateAround(new THREE.Vector2(0,0),lerp(0,Math.PI*2,Math.random()));
   const randomVec = new THREE.Vector2(
-    lerp(-1,1,Math.random()),
-    lerp(-1,1,Math.random())
+    lerp(-1, 1, Math.random()),
+    lerp(-1, 1, Math.random())
   );
   // TextureOffSet.rotateAround(new THREE.Vector2(0,0),Math.PI*2 / 60);
   // console.log(randomVec);
-  if(start){
-    // TextureOffSet.copy(randomVec);
-    TextureOffSet.rotateAround(new THREE.Vector2(0,0),(Math.PI*2) / (60 * 1));
+  let time = new Date().getTime() / 1000;
+  let timeFract = time - Math.floor(time);
+  const synchVec = new THREE.Vector2(0.015, 0.015);
+  synchVec.rotateAround(new THREE.Vector2(0, 0), lerp(0, Math.PI, timeFract))
+  if (start) {
+    // TextureOffSet.copy(synchVec);
+    TextureOffSet.rotateAround(new THREE.Vector2(0, 0), (Math.PI * 2) / (60 * 2));
     // TextureOffSet.rotateAround(new THREE.Vector2(0,0),0.009);
   }
-
   renderer.render(scene, camera, renderTarget);
   renderer.render(vibroScene, vibroCamera);
   requestAnimationFrame(render);
