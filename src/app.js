@@ -11,6 +11,11 @@ document.body.appendChild(renderer.domElement);
 const boxGeo = new THREE.BoxGeometry(100, 100, 100);
 const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 const boxMesh = new THREE.Mesh(boxGeo, boxMaterial);
+const backGround = new THREE.Mesh(
+  new THREE.PlaneGeometry(1000,1000),
+  new THREE.MeshBasicMaterial({color:0xffffff})
+)
+backGround.position.z = -1000;
 boxMesh.position.z = -500;
 
 const boxLight = new THREE.PointLight(0xffffff, 0.4);
@@ -30,7 +35,7 @@ boxMesh2.position.z = -500;
 
 boxMesh.rotateX(0.5)
 
-scene.add(boxMesh, boxLight);
+scene.add(boxMesh, boxLight,backGround);
 vibroScene.add(planeMesh);
 let start = false
 document.addEventListener('click', () => {
@@ -55,11 +60,12 @@ function render() {
   // console.log(randomVec);
   let time = new Date().getTime() / 1000;
   let timeFract = time - Math.floor(time);
-  const synchVec = new THREE.Vector2(0.015, 0.015);
-  synchVec.rotateAround(new THREE.Vector2(0, 0), lerp(0, Math.PI, timeFract))
+  const synchVec = new THREE.Vector2(0.03, 0.03);
+  synchVec.rotateAround(new THREE.Vector2(0, 0), lerp(0, Math.PI * 2, timeFract));
+  console.log(synchVec);
   if (start) {
-    // TextureOffSet.copy(synchVec);
-    TextureOffSet.rotateAround(new THREE.Vector2(0, 0), (Math.PI * 2) / (60 * 2));
+    TextureOffSet.copy(synchVec);
+    // TextureOffSet.rotateAround(new THREE.Vector2(0, 0), (Math.PI * 2) / (60 * 2));
     // TextureOffSet.rotateAround(new THREE.Vector2(0,0),0.009);
   }
   renderer.render(scene, camera, renderTarget);

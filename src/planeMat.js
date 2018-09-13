@@ -8,7 +8,7 @@ export const TextureOffSet = new Vector2(0.1, 0.1);
 const uniforms = {
   tDiffuse: { value: renderTarget.texture },
   offSet: { value: TextureOffSet },
-  pixels: { value: 512 },
+  pixels: { value: 256 },
   gap: { value: 0.2 }
 }
 
